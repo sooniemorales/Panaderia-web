@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos | SKZOO Bakery</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .pedidos-contenedor {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Tabs para filtrar */
+        .tabs-pedidos {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #ffe0c0;
+            padding-bottom: 0.5rem;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: 0.2s;
+            color: #b45f2b;
+        }
+        .tab-btn.active {
+            background: #ff6b9d;
+            color: white;
+        }
+        .tab-btn:hover:not(.active) {
+            background: #ffe0c0;
+        }
+        
+        /* Tarjeta de pedido */
+        .pedido-card {
+            background: white;
+            border-radius: 28px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .pedido-card:hover {
+            transform: translateY(-3px);
+        }
+        .pedido-header {
+            background: #fff3e8;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            border-bottom: 2px solid #ff6b9d;
+        }
+        .pedido-folio {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #b45f2b;
+        }
+        .pedido-fecha {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .pedido-estado {
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .estado-pendiente {
+            background: #fff3c9;
+            color: #d4a11e;
+        }
+        .estado-proceso {
+            background: #d4e8ff;
+            color: #4a90e2;
+        }
+        .estado-entregado {
+            background: #d4f0d4;
+            color: #2b6e3c;
+        }
+        .estado-cancelado {
+            background: #ffe0e0;
+            color: #c23d2b;
+        }
+        
+        .pedido-body {
+            padding: 1.5rem;
+        }
+        .pedido-productos {
+            margin-bottom: 1rem;
+        }
+        .pedido-producto-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #f3dbbc;
+        }
+        .pedido-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 2px solid #ffe0c0;
+        }
+        .pedido-cliente {
+            background: #f9f9f9;
+            padding: 0.8rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .sin-pedidos {
+            text-align: center;
+            padding: 3rem;
+            background: #fffbf5;
+            border-radius: 28px;
+            color: #999;
+        }
+        .sin-pedidos a {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+        
+        /* Botón reordenar */
+        .btn-reordenar {
+            background: #4a90e2;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        .btn-reordenar:hover {
+            background: #357abd;
+        }
+        
+        @media (max-width: 768px) {
+            .pedido-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <h1 class="logo">SKZOO <span>Bakery</span></h1>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="pedido.html">Productos</a></li>
+            <li><a href="mis-pedidos.html">Mis pedidos</a></li>
+            <li><a href="pago.html">Método de pago</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <button class="hamburger" id="menu-toggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </nav>
+</header>
+
+<section class="pedido-titulo">
+    <h2>📋 Mis Pedidos</h2>
+    <p>Consulta el estado de tus compras y el historial de pedidos</p>
+</section>
+
+<section class="pedidos-contenedor">
+    <!-- TABS -->
+    <div class="tabs-pedidos">
+        <button class="tab-btn active" data-tab="activos">🔄 En proceso</button>
+        <button class="tab-btn" data-tab="historial">📜 Historial</button>
+        <button class="tab-btn" data-tab="todos">📦 Todos</button>
+    </div>
+    
+    <div id="lista-pedidos">
+        <!-- Aquí se cargan los pedidos dinámicamente -->
+        <div class="sin-pedidos">
+            <p>🛒 No tienes pedidos aún</p>
+            <a href="pedido.html">✨ Ver productos y hacer tu primer pedido</a>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>SKZOO Bakery — Hecho con amor y mucha harina © 2026</p>
+</footer>
+
+<script>
+    // Clave para guardar el historial de pedidos
+    const STORAGE_HISTORIAL = 'skzoo_historial_pedidos';
+    
+    // Estados posibles
+    const ESTADOS = {
+        PENDIENTE: 'pendiente',
+        EN_PROCESO: 'en_proceso',
+        ENTREGADO: 'entregado',
+        CANCELADO: 'cancelado'
+    };
+    
+    // Nombres bonitos para los estados
+    const estadoTexto = {
+        'pendiente': '⏳ Pendiente',
+        'en_proceso': '🍞 En preparación',
+        'entregado': '✅ Entregado',
+        'cancelado': '❌ Cancelado'
+    };
+    
+    const estadoClass = {
+        'pendiente': 'estado-pendiente',
+        'en_proceso': 'estado-proceso',
+        'entregado': 'estado-entregado',
+        'cancelado': 'estado-cancelado'
+    };
+    
+    // Cargar historial de pedidos
+    function cargarHistorial() {
+        const stored = localStorage.getItem(STORAGE_HISTORIAL);
+        if(stored) {
+            return JSON.parse(stored);
+        }
+        return [];
+    }
+    
+    // Guardar un nuevo pedido (se llama desde pago.html cuando se confirma)
+    function guardarPedido(pedido) {
+        const historial = cargarHistorial();
+        const nuevoPedido = {
+            ...pedido,
+            id: Date.now(),
+            estado: ESTADOS.PENDIENTE,  // Comienza como pendiente
+            fechaCreacion: new Date().toISOString()
+        };
+        historial.unshift(nuevoPedido); // Agregar al inicio (más reciente primero)
+        localStorage.setItem(STORAGE_HISTORIAL, JSON.stringify(historial));
+        return nuevoPedido;
+    }
+    
+    // Actualizar estado de un pedido (para admin o simulación)
+    function actualizarEstadoPedido(id, nuevoEstado) {
+        const historial = cargarHistorial();
+        const index = historial.findIndex(p => p.id === id);
+        if(index !== -1) {
+            historial[index].estado = nuevoEstado;
+            localStorage.setItem(STORAGE_HISTORIAL, JSON.stringify(historial));
+        }
+    }
+    
+    // Formatear fecha
+    function formatearFecha(fechaISO) {
+        const fecha = new Date(fechaISO);
+        return fecha.toLocaleDateString('es-MX', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+    
+    // Mostrar pedidos según filtro
+    function mostrarPedidos(filtro = 'activos') {
+        const historial = cargarHistorial();
+        const container = document.getElementById('lista-pedidos');
+        
+        if(historial.length === 0) {
+            container.innerHTML = `
+                <div class="sin-pedidos">
+                    <p>🛒 No tienes pedidos aún</p>
+                    <a href="pedido.html">✨ Ver productos y hacer tu primer pedido</a>
+                </div>
+            `;
+            return;
+        }
+        
+        // Filtrar
+        let pedidosFiltrados = [];
+        if(filtro === 'activos') {
+            pedidosFiltrados = historial.filter(p => 
+                p.estado === ESTADOS.PENDIENTE || p.estado === ESTADOS.EN_PROCESO
+            );
+        } else if(filtro === 'historial') {
+            pedidosFiltrados = historial.filter(p => 
+                p.estado === ESTADOS.ENTREGADO || p.estado === ESTADOS.CANCELADO
+            );
+        } else {
+            pedidosFiltrados = historial;
+        }
+        
+        if(pedidosFiltrados.length === 0) {
+            container.innerHTML = `
+                <div class="sin-pedidos">
+                    <p>📭 No hay pedidos en esta categoría</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Generar HTML
+        container.innerHTML = pedidosFiltrados.map(pedido => `
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <span class="pedido-folio">📄 ${pedido.folio || `SKZ-${pedido.id}`}</span>
+                    <span class="pedido-fecha">📅 ${formatearFecha(pedido.fechaCreacion || pedido.fecha)}</span>
+                    <span class="pedido-estado ${estadoClass[pedido.estado]}">${estadoTexto[pedido.estado]}</span>
+                </div>
+                <div class="pedido-body">
+                    <div class="pedido-productos">
+                        ${pedido.productos.map(prod => `
+                            <div class="pedido-producto-item">
+                                <span>🍞 ${prod.nombre}</span>
+                                <span>$${prod.precio}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="pedido-total">
+                        Total: $${pedido.total}
+                    </div>
+                    <div class="pedido-cliente">
+                        <strong>📍 Entrega:</strong> ${pedido.domicilio || 'No especificado'}<br>
+                        <strong>📞 Contacto:</strong> ${pedido.cliente} - ${pedido.telefono || 'Sin teléfono'}<br>
+                        ${pedido.notas && pedido.notas !== 'Sin notas' ? `<strong>📝 Notas:</strong> ${pedido.notas}` : ''}
+                    </div>
+                    <button class="btn-reordenar" onclick="reordenarPedido(${pedido.id})">
+                        🔄 Volver a pedir estos productos
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Función para reordenar (agrega los productos al carrito)
+    function reordenarPedido(id) {
+        const historial = cargarHistorial();
+        const pedido = historial.find(p => p.id === id);
+        
+        if(pedido && pedido.productos) {
+            // Obtener carrito actual
+            let carritoActual = [];
+            const stored = localStorage.getItem('skzoo_carrito');
+            if(stored) {
+                carritoActual = JSON.parse(stored);
+            }
+            
+            // Agregar productos del pedido anterior
+            pedido.productos.forEach(prod => {
+                carritoActual.push({ nombre: prod.nombre, precio: prod.precio });
+            });
+            
+            localStorage.setItem('skzoo_carrito', JSON.stringify(carritoActual));
+            alert(`✅ Se agregaron ${pedido.productos.length} productos al carrito`);
+            window.location.href = 'pedido.html';
+        }
+    }
+    
+    // Función para SIMULAR cambios de estado (opcional - para pruebas)
+    function simularProcesamientoPedido() {
+        const historial = cargarHistorial();
+        let modificado = false;
+        
+        historial.forEach(pedido => {
+            // Si tiene más de 2 minutos y está pendiente, pasar a "en proceso"
+            const fechaPedido = new Date(pedido.fechaCreacion);
+            const minutosDiff = (Date.now() - fechaPedido.getTime()) / 1000 / 60;
+            
+            if(pedido.estado === ESTADOS.PENDIENTE && minutosDiff > 2) {
+                pedido.estado = ESTADOS.EN_PROCESO;
+                modificado = true;
+            }
+            // Si tiene más de 5 minutos y está en proceso, pasar a "entregado"
+            if(pedido.estado === ESTADOS.EN_PROCESO && minutosDiff > 5) {
+                pedido.estado = ESTADOS.ENTREGADO;
+                modificado = true;
+            }
+        });
+        
+        if(modificado) {
+            localStorage.setItem(STORAGE_HISTORIAL, JSON.stringify(historial));
+            mostrarPedidos(tabActual);
+        }
+    }
+    
+    let tabActual = 'activos';
+    
+    // Inicializar tabs
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                tabActual = btn.getAttribute('data-tab');
+                mostrarPedidos(tabActual);
+            });
+        });
+    }
+    
+    // Menú hamburguesa
+    const menuToggle = document.getElementById("menu-toggle");
+    const navLinks = document.getElementById("nav-links");
+    if(menuToggle) {
+        menuToggle.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+            menuToggle.classList.toggle("active");
+        });
+    }
+    
+    // Inicializar
+    initTabs();
+    mostrarPedidos('activos');
+    
+    // Simular procesamiento cada 10 segundos (solo para demo)
+    setInterval(simularProcesamientoPedido, 10000);
+    
+    // Exponer funciones globalmente para que pago.html pueda usarlas
+    window.guardarPedido = guardarPedido;
+    window.actualizarEstadoPedido = actualizarEstadoPedido;
+    
+    console.log('📦 Sistema de historial de pedidos activo');
+</script>
+
+</body>
+</html>

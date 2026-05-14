@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Pedidos | SKZOO Bakery</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        /* Estilos específicos para pedido.html */
+        .pedido-contenedor {
+            max-width: 1300px;
+            margin: 2rem auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 0 1.5rem;
+        }
+        .carousel-section {
+            flex: 2;
+            min-width: 260px;
+            background: #fff7ef;
+            border-radius: 36px;
+            padding: 1.2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .carousel-wrapper {
+            overflow: hidden;
+            border-radius: 32px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .slide {
+            flex: 0 0 100%;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+        }
+        .img-zone {
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            background: #f3e4d4;
+        }
+        .img-zone img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .slide:hover .img-zone img {
+            transform: scale(1.02);
+        }
+        .text-zone {
+            padding: 1.5rem;
+            background: white;
+            text-align: center;
+        }
+        .slide-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #c67a3a;
+        }
+        .slide-desc {
+            margin: 0.5rem auto;
+            color: #5c3f23;
+            line-height: 1.4;
+            max-width: 90%;
+        }
+        .slide-tag {
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #2b6e3c;
+            margin: 0.5rem 0;
+        }
+        .agregar-btn {
+            background: #ff6b9d;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .agregar-btn:hover {
+            background: #e55584;
+            transform: scale(1.02);
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 1rem 0 0.5rem;
+        }
+        .btn-slide {
+            background: #e9d9cb;
+            border: none;
+            font-size: 1.8rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 60px;
+            cursor: pointer;
+        }
+        .dots {
+            display: flex;
+            gap: 10px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #d9c2ab;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .dot.active {
+            background: #ff6b9d;
+            width: 26px;
+        }
+        .progress-bar {
+            width: 90%;
+            margin: 12px auto 0;
+            height: 4px;
+            background: #eedfcb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #ff6b9d;
+            border-radius: 4px;
+            animation: progress 4s linear infinite;
+        }
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        .carrito {
+            flex: 1;
+            min-width: 260px;
+            background: #fffbf5;
+            border-radius: 32px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid #ffe1c4;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .carrito h3 {
+            font-size: 1.8rem;
+            border-bottom: 2px dashed #f3cfb0;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        #lista-carrito {
+            list-style: none;
+            max-height: 320px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+        #lista-carrito li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff3e8;
+            padding: 0.7rem 1rem;
+            margin-bottom: 0.6rem;
+            border-radius: 60px;
+        }
+        .eliminar-item {
+            background: #4a90e2;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 40px;
+            padding: 0.2rem 0.7rem;
+            cursor: pointer;
+        }
+        .eliminar-item:hover {
+            background: #357abd;
+        }
+        .total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-top: 2px solid #ffe0c0;
+            padding-top: 1rem;
+            margin: 0.8rem 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .boton-pagar {
+            display: block;
+            background: #4a90e2;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            padding: 0.8rem;
+            border-radius: 60px;
+            font-weight: bold;
+        }
+        .boton-pagar:hover {
+            background: #357abd;
+        }
+        @media (max-width: 768px) {
+            .img-zone { height: 240px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <h1 class="logo">SKZOO <span>Bakery</span></h1>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="pedido.html">Productos</a></li>
+            <li><a href="mis-pedidos.html">Mis pedidos</a></li>
+            <li><a href="pago.html">Pago</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <button class="hamburger" id="menu-toggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </nav>
+</header>
+
+<section class="pedido-titulo">
+    <h2>Nuestros Productos</h2>
+    <p>Elige tus favoritos recién horneados — hechos con amor</p>
+</section>
+
+<section class="pedido-contenedor">
+    <div class="carousel-section">
+        <div class="carousel-wrapper">
+            <div class="carousel-track" id="track">
+                
+                <!-- PRODUCTO 1 -->
+                <div class="slide">
+                    <div class="img-zone">
+                        <img src="img/pan1.jpg" alt="Pan Artesanal">
+                    </div>
+                    <div class="text-zone">
+                        <p class="slide-title">Pan Artesanal</p>
+                        <p class="slide-desc">Corteza crujiente, miga suave. Horneado con masa madre.</p>
+                        <span class="slide-tag">$9</span>
+                        <button class="agregar-btn" onclick="agregarProducto('Pan Artesanal',9)">Agregar</button>
+                    </div>
+                </div>
+
+                <!-- PRODUCTO 2 -->
+                <div class="slide">
+                    <div class="img-zone">
+                        <img src="img/pan2.jpeg" alt="Rollo de Canela">
+                    </div>
+                    <div class="text-zone">
+                        <p class="slide-title">Rollo de Canela</p>
+                        <p class="slide-desc">Suave, con glaseado de vainilla y canela premium.</p>
+                        <span class="slide-tag">$11</span>
+                        <button class="agregar-btn" onclick="agregarProducto('Rollo de Canela',11)">Agregar</button>
+                    </div>
+                </div>
+
+                <!-- PRODUCTO 3 -->
+                <div class="slide">
+                    <div class="img-zone">
+                        <img src="img/pan3.jpeg" alt="Concha Especial">
+                    </div>
+                    <div class="text-zone">
+                        <p class="slide-title">Concha Especial</p>
+                        <p class="slide-desc">Tradicional mexicana, cubierta de azúcar y cacao.</p>
+                        <span class="slide-tag">$14</span>
+                        <button class="agregar-btn" onclick="agregarProducto('Concha Especial',14)">Agregar</button>
+                    </div>
+                </div>
+
+                <!-- PRODUCTO 4 -->
+                <div class="slide">
+                    <div class="img-zone">
+                        <img src="img/pan4.jpeg" alt="Dona de chocolate de fresa">
+                    </div>
+                    <div class="text-zone">
+                        <p class="slide-title">Dona de chocolate de fresa</p>
+                        <p class="slide-desc">Dona suave cubierta con chocolate y decoración de fresa.</p>
+                        <span class="slide-tag">$8</span>
+                        <button class="agregar-btn" onclick="agregarProducto('Dona de chocolate de fresa',8)">Agregar</button>
+                    </div>
+                </div>
+
+                <!-- PRODUCTO 5 -->
+                <div class="slide">
+                    <div class="img-zone">
+                        <img src="img/pan5.jpg" alt="Cuernito">
+                    </div>
+                    <div class="text-zone">
+                        <p class="slide-title">Cuernito</p>
+                        <p class="slide-desc">Hojaldre crujiente relleno de crema pastelera.</p>
+                        <span class="slide-tag">$8</span>
+                        <button class="agregar-btn" onclick="agregarProducto('Cuernito',8)">Agregar</button>
+                    </div>
+                </div>
+
+                <!-- PRODUCTO 6 -->
+                <div class="slide">
+                    <div class="img-zone">
+                        <img src="img/pan6.jpg" alt="Galletas Especiales">
+                    </div>
+                    <div class="text-zone">
+                        <p class="slide-title">Galletas Especiales</p>
+                        <p class="slide-desc">Incluye 8 galletas surtidas: chispas, avena, mantequilla.</p>
+                        <span class="slide-tag">$25</span>
+                        <button class="agregar-btn" onclick="agregarProducto('Galletas Especiales',25)">Agregar</button>
+                    </div>
+                </div>
+
+                <!-- PRODUCTO 7 -->
+                <div class="slide">
+                    <div class="img-zone">
+                        <img src="img/pan7.jpeg" alt="Pastel 3 leches">
+                    </div>
+                    <div class="text-zone">
+                        <p class="slide-title">Pastel 3 leches</p>
+                        <p class="slide-desc">Esponjoso bañado en tres leches, cubierto con merengue.</p>
+                        <span class="slide-tag">$270</span>
+                        <button class="agregar-btn" onclick="agregarProducto('Pastel 3 leches',270)">Agregar</button>
+                    </div>
+                </div>
+
+                <!-- PRODUCTO 8 -->
+                <div class="slide">
+                    <div class="img-zone">
+                        <img src="img/pan8.jpeg" alt="Pastel de Nuez">
+                    </div>
+                    <div class="text-zone">
+                        <p class="slide-title">Pastel de Nuez</p>
+                        <p class="slide-desc">Bizcocho de nuez con betún de queso crema.</p>
+                        <span class="slide-tag">$300</span>
+                        <button class="agregar-btn" onclick="agregarProducto('Pastel de Nuez',300)">Agregar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn-slide" id="prev">←</button>
+            <div class="dots" id="dots"></div>
+            <button class="btn-slide" id="next">→</button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="fill"></div>
+        </div>
+    </div>
+
+    <div class="carrito">
+        <h3>Mi Pedido</h3>
+        <ul id="lista-carrito"></ul>
+        <div class="total">
+            Total: <span id="total">$0</span>
+        </div>
+        <a href="pago.html" class="boton-pagar">Ir a pagar →</a>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>SKZOO Bakery — Hecho con amor y mucha harina © 2026</p>
+</footer>
+
+<script>
+    // CARRITO GLOBAL
+    let carrito = [];
+
+    function guardarCarrito() {
+        localStorage.setItem('skzoo_carrito', JSON.stringify(carrito));
+    }
+
+    function cargarCarrito() {
+        const stored = localStorage.getItem('skzoo_carrito');
+        if(stored) {
+            carrito = JSON.parse(stored);
+        } else {
+            carrito = [];
+        }
+        actualizarCarrito();
+    }
+
+    function agregarProducto(nombre, precio) {
+        carrito.push({ nombre, precio });
+        guardarCarrito();
+        actualizarCarrito();
+        // Notificación
+        const msg = document.createElement('div');
+        msg.innerText = `+ ${nombre} agregado`;
+        msg.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#2b6e3c;color:white;padding:10px 18px;border-radius:40px;z-index:999;font-weight:bold';
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 1200);
+    }
+
+    function actualizarCarrito() {
+        const lista = document.getElementById("lista-carrito");
+        const totalSpan = document.getElementById("total");
+        if(!lista) return;
+        lista.innerHTML = "";
+        let suma = 0;
+        carrito.forEach((producto, idx) => {
+            suma += producto.precio;
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${producto.nombre} <span>$${producto.precio}</span>
+                <button class="eliminar-item" data-index="${idx}">Quitar</button>
+            `;
+            lista.appendChild(li);
+        });
+        totalSpan.textContent = "$" + suma;
+        
+        // Eventos eliminar
+        document.querySelectorAll('.eliminar-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(btn.getAttribute('data-index'));
+                carrito.splice(index, 1);
+                guardarCarrito();
+                actualizarCarrito();
+            });
+        });
+    }
+
+    // CARRUSEL
+    function iniciarCarrusel() {
+        const track = document.getElementById("track");
+        if(!track) return;
+        const slides = document.querySelectorAll(".slide");
+        const dotsContainer = document.getElementById("dots");
+        const fill = document.getElementById("fill");
+        let current = 0;
+        let timer;
+
+        dotsContainer.innerHTML = "";
+        slides.forEach((_, i) => {
+            const dot = document.createElement("div");
+            dot.className = "dot" + (i === 0 ? " active" : "");
+            dot.onclick = () => goTo(i);
+            dotsContainer.appendChild(dot);
+        });
+
+        function goTo(n) {
+            current = (n + slides.length) % slides.length;
+            track.style.transform = `translateX(-${current * 100}%)`;
+            document.querySelectorAll(".dot").forEach((d, i) => {
+                d.classList.toggle("active", i === current);
+            });
+            resetTimer();
+        }
+
+        function resetTimer() {
+            if(timer) clearInterval(timer);
+            if(fill) {
+                fill.style.animation = "none";
+                void fill.offsetWidth;
+                fill.style.animation = "progress 4s linear infinite";
+            }
+            timer = setInterval(() => goTo(current + 1), 4000);
+        }
+
+        document.getElementById("prev")?.addEventListener("click", () => goTo(current - 1));
+        document.getElementById("next")?.addEventListener("click", () => goTo(current + 1));
+        resetTimer();
+    }
+
+    // MENU HAMBURGUESA
+    const menuToggle = document.getElementById("menu-toggle");
+    const navLinks = document.getElementById("nav-links");
+    if(menuToggle) {
+        menuToggle.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+            menuToggle.classList.toggle("active");
+        });
+    }
+
+    // INICIALIZAR
+    cargarCarrito();
+    iniciarCarrusel();
+</script>
+
+</body>
+</html

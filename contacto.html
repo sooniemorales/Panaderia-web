@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Contacto | SKZOO Bakery</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        /* Estilos específicos para contacto */
+        .contacto-contenedor {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Hero mejorado */
+        .hero-contacto {
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+            background: linear-gradient(135deg, #fffaf3 0%, #fff3e8 100%);
+            border-radius: 60px;
+            margin-bottom: 2rem;
+        }
+        .hero-contacto h2 {
+            font-size: 2.8rem;
+            color: #b45f2b;
+            margin-bottom: 0.5rem;
+        }
+        .hero-contacto h2 span {
+            background: #ff6b9d;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+        .hero-contacto p {
+            font-size: 1.2rem;
+            color: #6b4c2c;
+            max-width: 700px;
+            margin: 1rem auto 0;
+        }
+        
+        /* Grid de información de contacto */
+        .contacto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 3rem;
+        }
+        
+        /* Tarjetas de contacto */
+        .contacto-card {
+            background: white;
+            border-radius: 32px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #ffe1c4;
+        }
+        .contacto-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: #ff6b9d;
+        }
+        
+        .contacto-icono {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        .contacto-card h3 {
+            font-size: 1.5rem;
+            color: #b45f2b;
+            margin-bottom: 0.8rem;
+        }
+        .contacto-card p {
+            font-size: 1.1rem;
+            color: #4a2e1f;
+            line-height: 1.4;
+        }
+        .contacto-card a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .contacto-card a:hover {
+            color: #ff6b9d;
+            text-decoration: underline;
+        }
+        
+        /* Mapa y formulario sección */
+        .contacto-seccion-doble {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .mapa-container, .formulario-container {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            border-radius: 32px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #ffe1c4;
+        }
+        .mapa-container h3, .formulario-container h3 {
+            font-size: 1.5rem;
+            color: #b45f2b;
+            margin-bottom: 1rem;
+            border-left: 4px solid #ff6b9d;
+            padding-left: 1rem;
+        }
+        .mapa {
+            background: #e8d5c4;
+            border-radius: 24px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b45f2b;
+            font-weight: bold;
+            overflow: hidden;
+        }
+        .mapa iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        /* Formulario */
+        .form-grupo {
+            margin-bottom: 1rem;
+        }
+        .form-grupo label {
+            display: block;
+            font-weight: 600;
+            color: #b45f2b;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .form-grupo input, .form-grupo textarea {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #eedbc8;
+            border-radius: 60px;
+            font-size: 1rem;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .form-grupo input:focus, .form-grupo textarea:focus {
+            border-color: #ff6b9d;
+            outline: none;
+        }
+        .form-grupo textarea {
+            border-radius: 24px;
+            resize: vertical;
+        }
+        .btn-enviar {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .btn-enviar:hover {
+            background: #e55584;
+            transform: translateY(-2px);
+        }
+        
+        /* Redes sociales */
+        .redes-section {
+            text-align: center;
+            padding: 2rem;
+            background: #fff3e8;
+            border-radius: 48px;
+            margin-bottom: 2rem;
+        }
+        .redes-section h3 {
+            font-size: 1.6rem;
+            color: #b45f2b;
+            margin-bottom: 1rem;
+        }
+        .redes-icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .red-social {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 60px;
+            text-decoration: none;
+            color: #b45f2b;
+            font-weight: 500;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .red-social:hover {
+            background: #ff6b9d;
+            color: white;
+            transform: translateY(-3px);
+        }
+        .red-social span {
+            font-size: 1.5rem;
+        }
+        
+        /* Horario especial */
+        .horario-destacado {
+            background: linear-gradient(135deg, #ff6b9d20, #4a90e220);
+            border-radius: 32px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .horario-destacado p {
+            margin: 0.3rem 0;
+        }
+        .horario-destacado .atencion {
+            font-weight: bold;
+            color: #b45f2b;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-contacto h2 { font-size: 2rem; }
+            .contacto-card { padding: 1.5rem; }
+            .redes-icons { gap: 1rem; }
+            .red-social { padding: 0.5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <h1 class="logo">SKZOO <span>Bakery</span></h1>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="pedido.html">Productos</a></li>
+            <li><a href="mis-pedidos.html">Mis pedidos</a></li>
+            <li><a href="pago.html">Pago</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <button class="hamburger" id="menu-toggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </nav>
+</header>
+
+<section class="hero-contacto">
+    <h2>¡Hablemos! <span>🍞</span></h2>
+    <p>Estamos disponibles para atender tus pedidos, cotizaciones y resolver cualquier duda. <br>Tu opinión nos importa 💕</p>
+</section>
+
+<div class="contacto-contenedor">
+    <!-- Grid de información -->
+    <div class="contacto-grid">
+        <div class="contacto-card">
+            <div class="contacto-icono">📍</div>
+            <h3>Dirección</h3>
+            <p>Calle San Juan, 007<br>56580 Coatepec, Méx</p>
+        </div>
+        
+        <div class="contacto-card">
+            <div class="contacto-icono">📞</div>
+            <h3>Teléfono / WhatsApp</h3>
+            <p><a href="tel:5528538983">55 2853 8983</a></p>
+            <p style="font-size: 0.85rem; color:#888;">Llamadas o mensajes</p>
+        </div>
+        
+        <div class="contacto-card">
+            <div class="contacto-icono">✉️</div>
+            <h3>Correo Electrónico</h3>
+            <p><a href="mailto:contacto@SKZOOBakery.com">contacto@SKZOOBakery.com</a></p>
+        </div>
+        
+        <div class="contacto-card">
+            <div class="contacto-icono">🕐</div>
+            <h3>Horario de atención</h3>
+            <p>Lunes a Domingo<br><strong>7:00 AM - 6:00 PM</strong></p>
+        </div>
+    </div>
+    
+    <!-- Mapa + Formulario -->
+    <div class="contacto-seccion-doble">
+        <div class="mapa-container">
+            <h3>📍 Encuéntranos</h3>
+            <div class="mapa">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.5678!2d-96.9595!3d19.4536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85cf8e8c8c8c8c8c%3A0x8c8c8c8c8c8c8c8c!2sCoatepec%2C%20Veracruz%2C%20Mexico!5e0!3m2!1ses!2smx!4v1700000000000!5m2!1ses!2smx" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+        
+        <div class="formulario-container">
+            <h3>📝 Escríbenos directo</h3>
+            <form id="form-contacto">
+                <div class="form-grupo">
+                    <label>Tu nombre *</label>
+                    <input type="text" id="nombre-contacto" placeholder="Ej: Ana López" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Correo o Teléfono *</label>
+                    <input type="text" id="email-contacto" placeholder="correo@ejemplo.com o teléfono" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Mensaje *</label>
+                    <textarea id="mensaje-contacto" rows="4" placeholder="¿Qué te gustaría pedir o consultar?"></textarea>
+                </div>
+                <button type="submit" class="btn-enviar">💬 Enviar mensaje</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Redes sociales -->
+    <div class="redes-section">
+        <h3>✨ Síguenos y mantente al día ✨</h3>
+        <div class="redes-icons">
+            <a href="#" class="red-social"><span>📱</span> Instagram</a>
+            <a href="#" class="red-social"><span>👍</span> Facebook</a>
+            <a href="#" class="red-social"><span>🐦</span> Twitter</a>
+            <a href="#" class="red-social"><span>📹</span> TikTok</a>
+        </div>
+    </div>
+    
+    <!-- Horario destacado -->
+    <div class="horario-destacado">
+        <p class="atencion">🎁 ¡Hacemos entregas en Coatepec y zonas cercanas!</p>
+        <p>Pedidos con 24 hrs de anticipación para pasteles personalizados 🎂</p>
+        <p>💳 Aceptamos transferencia, tarjeta y Mercado Pago</p>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>SKZOO Bakery © 2026 — Hecho con amor y mucha harina 🍞💕</p>
+</footer>
+
+<script>
+    // Menú hamburguesa
+    const menuToggle = document.getElementById("menu-toggle");
+    const navLinks = document.getElementById("nav-links");
+    if(menuToggle) {
+        menuToggle.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+            menuToggle.classList.toggle("active");
+        });
+    }
+    
+    // Formulario de contacto
+    const formContacto = document.getElementById("form-contacto");
+    if(formContacto) {
+        formContacto.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById("nombre-contacto")?.value.trim();
+            const contacto = document.getElementById("email-contacto")?.value.trim();
+            const mensaje = document.getElementById("mensaje-contacto")?.value.trim();
+            
+            if(!nombre || !contacto || !mensaje) {
+                alert("❌ Por favor completa todos los campos");
+                return;
+            }
+            
+            // Simular envío (aquí podrías integrar un servicio real)
+            alert(`✅ ¡Gracias ${nombre}! Hemos recibido tu mensaje.\n\nTe responderemos a la brevedad a: ${contacto}`);
+            formContacto.reset();
+        });
+    }
+</script>
+
+</body>
+</html>

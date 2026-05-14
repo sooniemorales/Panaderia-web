@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago | SKZOO Bakery</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .pago-contenedor {
+            max-width: 1300px;
+            margin: 2rem auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 0 1.5rem;
+        }
+        .pago-card {
+            flex: 1;
+            background: #fffbf5;
+            border-radius: 36px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            min-width: 320px;
+        }
+        .pago-card h3 {
+            font-size: 1.8rem;
+            color: #b45f2b;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #ff6b9d;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+        #resumen-pedido {
+            background: #fff3e4;
+            padding: 1.5rem;
+            border-radius: 28px;
+            margin: 1.5rem 0;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #ffe0c0;
+        }
+        .item-resumen {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 2px solid #f3dbbc;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .item-resumen span:first-child {
+            font-size: 1.2rem;
+        }
+        .item-resumen span:last-child {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2b6e3c;
+        }
+        .total-pago {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 3px solid #ff6b9d;
+            color: #2b6e3c;
+        }
+        .total-pago span {
+            font-size: 2rem;
+            color: #d48c3c;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.8rem 0;
+            border: 2px solid #eedbc8;
+            border-radius: 60px;
+            background: white;
+            font-size: 1.1rem;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #ff6b9d;
+            outline: none;
+        }
+        textarea {
+            border-radius: 24px;
+            resize: vertical;
+        }
+        .campo-grupo {
+            margin-bottom: 0.5rem;
+        }
+        .campo-label {
+            font-weight: 600;
+            color: #b45f2b;
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+            display: block;
+        }
+        .fila-doble {
+            display: flex;
+            gap: 1rem;
+        }
+        .fila-doble > div {
+            flex: 1;
+        }
+        .metodos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .metodo-btn {
+            background: #ff6b9d;
+            border: none;
+            padding: 0.9rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: white;
+            flex: 1;
+            min-width: 120px;
+        }
+        .metodo-btn.active {
+            background: #e55584;
+            box-shadow: 0 4px 12px rgba(229,85,132,0.3);
+            transform: scale(1.02);
+        }
+        .metodo-btn:hover {
+            background: #e55584;
+            transform: translateY(-2px);
+        }
+        .confirmar-btn {
+            background: #4a90e2;
+            width: 100%;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: white;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .confirmar-btn:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+        }
+        .vaciar-btn {
+            background: #e2904a;
+            margin-top: 0.8rem;
+            font-size: 1rem;
+            padding: 0.8rem;
+        }
+        .vaciar-btn:hover {
+            background: #c97a39;
+        }
+        .modal-exito {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-card {
+            background: white;
+            max-width: 450px;
+            width: 90%;
+            padding: 2rem;
+            border-radius: 48px;
+            text-align: center;
+            animation: fadeInUp 0.4s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .boton {
+            background: #ff6b9d;
+            padding: 0.8rem 1.2rem;
+            border-radius: 40px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem 0.3rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .badge-vacio {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+        .badge-vacio a {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+        .metodo-title {
+            margin-top: 1rem;
+            font-size: 1.4rem;
+        }
+        .gif-animado {
+            width: 180px;
+            height: auto;
+            margin: 0 auto 1rem auto;
+            display: block;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        /* Instrucciones de pago */
+        .instruccion-pago {
+            background: #e8f4fd;
+            border-radius: 20px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: left;
+            border-left: 4px solid #ff6b9d;
+        }
+        .instruccion-pago h4 {
+            color: #b45f2b;
+            margin-bottom: 0.5rem;
+        }
+        .instruccion-pago p {
+            margin: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+        .numero-cuenta {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 1rem;
+            text-align: center;
+            margin: 0.5rem 0;
+            border: 1px dashed #4a90e2;
+        }
+        @media (max-width: 768px) {
+            .pago-card { padding: 1.5rem; }
+            .item-resumen { font-size: 1rem; }
+            .total-pago { font-size: 1.5rem; }
+            .fila-doble { flex-direction: column; gap: 0; }
+            .gif-animado { width: 140px; }
+            .modal-card { max-width: 350px; padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <h1 class="logo">SKZOO <span>Bakery</span></h1>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="pedido.html">Productos</a></li>
+            <li><a href="mis-pedidos.html">Mis pedidos</a></li>
+            <li><a href="pago.html">Pago</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <button class="hamburger" id="menu-toggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </nav>
+</header>
+
+<section class="pedido-titulo">
+    <h2>Confirmar Pago</h2>
+    <p>Revisa tu pedido, completa tus datos y elige cómo pagar</p>
+</section>
+
+<section class="pago-contenedor">
+    <div class="pago-card">
+        <h3>Resumen del Pedido</h3>
+        <div id="resumen-pedido"></div>
+        <div class="total-pago">
+            TOTAL: <span id="total-final">$0</span>
+        </div>
+        <button id="vaciar-carrito" class="confirmar-btn vaciar-btn">Vaciar carrito</button>
+    </div>
+
+    <div class="pago-card">
+        <h3>Datos del Cliente</h3>
+        
+        <div class="campo-grupo">
+            <label class="campo-label">Nombre completo *</label>
+            <input type="text" id="cliente" placeholder="Ej: María González">
+        </div>
+        
+        <div class="campo-grupo">
+            <label class="campo-label">Teléfono / WhatsApp *</label>
+            <input type="tel" id="telefono" placeholder="Ej: 228 123 4567">
+        </div>
+        
+        <div class="campo-grupo">
+            <label class="campo-label">Domicilio de envío *</label>
+            <input type="text" id="domicilio" placeholder="Calle, número, colonia, ciudad, código postal">
+        </div>
+        
+        <div class="fila-doble">
+            <div class="campo-grupo">
+                <label class="campo-label">Entre calles (opcional)</label>
+                <input type="text" id="entreCalles" placeholder="Entre calle A y calle B">
+            </div>
+            <div class="campo-grupo">
+                <label class="campo-label">Referencias</label>
+                <input type="text" id="referencias" placeholder="Casa blanca, tienda de la esquina...">
+            </div>
+        </div>
+        
+        <div class="campo-grupo">
+            <label class="campo-label">Notas adicionales</label>
+            <textarea id="notas" rows="2" placeholder="Horario de entrega, instrucciones especiales..."></textarea>
+        </div>
+        
+        <h3 class="metodo-title">Método de pago</h3>
+        <div class="metodos">
+            <button class="metodo-btn" data-metodo="Transferencia">Transferencia</button>
+            <button class="metodo-btn" data-metodo="Tarjeta">Tarjeta</button>
+            <button class="metodo-btn" data-metodo="Mercado Pago">Mercado Pago</button>
+        </div>
+        
+        <!-- INSTRUCCIONES DE PAGO (se muestran según método seleccionado) -->
+        <div id="instrucciones-pago" class="instruccion-pago" style="display: none;">
+            <!-- Aquí se cargarán las instrucciones dinámicamente -->
+        </div>
+        
+        <button class="confirmar-btn" id="confirmar-btn">Confirmar y pagar</button>
+    </div>
+</section>
+
+<!-- MODAL DE ÉXITO CON GIF ANIMADO -->
+<div class="modal-exito" id="modal-exito">
+    <div class="modal-card">
+        <img src="img/video1.gif" alt="Gracias por tu compra" class="gif-animado">
+        <h2 style="color: #2b6e3c; margin: 0.5rem 0;">¡Pago realizado!</h2>
+        <p style="margin: 0.5rem 0;">Tu pedido fue enviado correctamente.</p>
+        <p style="color: #b45f2b; font-weight: bold; margin: 0.5rem 0;">Gracias por tu compra en SKZOO Bakery</p>
+        <span id="folio" style="font-weight: bold; font-size: 1rem; background: #f0f0f0; padding: 0.3rem 1rem; border-radius: 40px; display: inline-block; margin: 0.5rem 0;"></span>
+        <div style="margin-top: 1rem;">
+            <a href="mis-pedidos.html" class="boton">Ver mis pedidos</a>
+            <a href="index.html" class="boton" style="background:#4a90e2;">Volver al inicio</a>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>SKZOO Bakery — Hecho con amor y mucha harina © 2026</p>
+</footer>
+
+<script>
+    let carrito = [];
+    let metodoSeleccionado = null;
+
+    // Datos bancarios (puedes cambiarlos por los tuyos)
+    const datosTransferencia = {
+        banco: "BBVA México",
+        titular: "SKZOO Bakery",
+        cuenta: "1234 5678 9012 3456",
+        clabe: "012 345 6789 012345678 9",
+        referencia: "SKZOO + tu nombre"
+    };
+
+    function mostrarInstrucciones(metodo) {
+        const instruccionesDiv = document.getElementById("instrucciones-pago");
+        
+        if(metodo === "Transferencia") {
+            instruccionesDiv.style.display = "block";
+            instruccionesDiv.innerHTML = `
+                <h4>🏦 Instrucciones para Transferencia</h4>
+                <p>Realiza tu pago a la siguiente cuenta:</p>
+                <div class="numero-cuenta">
+                    <strong>Banco:</strong> ${datosTransferencia.banco}<br>
+                    <strong>Titular:</strong> ${datosTransferencia.titular}<br>
+                    <strong>Número de cuenta:</strong> ${datosTransferencia.cuenta}<br>
+                    <strong>CLABE:</strong> ${datosTransferencia.clabe}
+                </div>
+                <p><strong>Referencia:</strong> ${datosTransferencia.referencia}</p>
+                <p style="font-size: 0.85rem; color: #666;">⚠️ Una vez realizado el pago, envía tu comprobante por WhatsApp al 55 2853 8983</p>
+            `;
+        } 
+        else if(metodo === "Tarjeta") {
+            instruccionesDiv.style.display = "block";
+            instruccionesDiv.innerHTML = `
+                <h4>💳 Instrucciones para Pago con Tarjeta</h4>
+                <p>El repartidor llevará consigo una <strong>terminal bancaria</strong> para que puedas pagar al momento de la entrega.</p>
+                <p>Aceptamos:</p>
+                <p>✅ Tarjetas de débito (Visa, Mastercard)<br>✅ Tarjetas de crédito<br>✅ Pago sin contacto (Contactless)</p>
+                <p style="font-size: 0.85rem; color: #666;">El repartidor confirmará tu pedido antes de realizar el cobro.</p>
+            `;
+        } 
+        else if(metodo === "Mercado Pago") {
+            instruccionesDiv.style.display = "block";
+            instruccionesDiv.innerHTML = `
+                <h4>🟦 Instrucciones para Mercado Pago</h4>
+                <p>Paga de forma segura con Mercado Pago:</p>
+                <div class="numero-cuenta">
+                    <strong>Usuario:</strong> SKZOO Bakery<br>
+                    <strong>Correo:</strong> pagos@skzoobakery.com<br>
+                    <strong>Alias:</strong> skzoo.bakery
+                </div>
+                <p><strong>Link de pago:</strong> Se enviará a tu correo después de confirmar</p>
+                <p style="font-size: 0.85rem; color: #666;">🔗 También puedes pagar con código QR que el repartidor te mostrará</p>
+            `;
+        } 
+        else {
+            instruccionesDiv.style.display = "none";
+        }
+    }
+
+    function guardarEnHistorial(pedido) {
+        const STORAGE_HISTORIAL = 'skzoo_historial_pedidos';
+        const historial = localStorage.getItem(STORAGE_HISTORIAL);
+        let pedidos = historial ? JSON.parse(historial) : [];
+        pedidos.unshift(pedido);
+        localStorage.setItem(STORAGE_HISTORIAL, JSON.stringify(pedidos));
+        console.log("Pedido guardado en historial:", pedido.folio);
+    }
+
+    function cargarCarrito() {
+        const stored = localStorage.getItem('skzoo_carrito');
+        if(stored) {
+            carrito = JSON.parse(stored);
+        } else {
+            carrito = [];
+        }
+        mostrarResumen();
+    }
+
+    function mostrarResumen() {
+        const resumenDiv = document.getElementById("resumen-pedido");
+        const totalSpan = document.getElementById("total-final");
+        
+        if(!carrito.length) {
+            resumenDiv.innerHTML = `<div class="badge-vacio">
+                <strong>No hay productos en tu pedido</strong><br><br>
+                <a href="pedido.html">Ver productos</a>
+            </div>`;
+            totalSpan.innerText = "$0";
+            return;
+        }
+        
+        let html = "";
+        let total = 0;
+        carrito.forEach((prod, idx) => {
+            html += `<div class="item-resumen">
+                        <span>${prod.nombre}</span>
+                        <span>$${prod.precio}</span>
+                     </div>`;
+            total += prod.precio;
+        });
+        resumenDiv.innerHTML = html;
+        totalSpan.innerText = "$" + total;
+    }
+
+    function guardarCarrito() {
+        localStorage.setItem('skzoo_carrito', JSON.stringify(carrito));
+    }
+
+    function vaciarCarrito() {
+        if(carrito.length > 0 && confirm("¿Estás seguro de vaciar todo el carrito?")) {
+            carrito = [];
+            guardarCarrito();
+            mostrarResumen();
+        } else if(carrito.length === 0) {
+            alert("El carrito ya está vacío");
+        }
+    }
+
+    function generarFolio() {
+        return "SKZ-" + Math.floor(Math.random() * 10000) + Date.now().toString().slice(-6);
+    }
+
+    function confirmarPago() {
+        if(!carrito.length) {
+            alert("No tienes productos en el carrito. Agrega algo desde la página de productos.");
+            return;
+        }
+        
+        const nombreCliente = document.getElementById("cliente")?.value.trim();
+        if(!nombreCliente) {
+            alert("Por favor ingresa tu nombre.");
+            document.getElementById("cliente").focus();
+            return;
+        }
+        
+        const domicilio = document.getElementById("domicilio")?.value.trim();
+        if(!domicilio) {
+            alert("Por favor ingresa tu domicilio de envío.");
+            document.getElementById("domicilio").focus();
+            return;
+        }
+        
+        if(!metodoSeleccionado) {
+            alert("Selecciona un método de pago.");
+            return;
+        }
+        
+        const telefono = document.getElementById("telefono")?.value.trim() || "No especificado";
+        const entreCalles = document.getElementById("entreCalles")?.value.trim() || "";
+        const referencias = document.getElementById("referencias")?.value.trim() || "";
+        const notas = document.getElementById("notas")?.value.trim() || "Sin notas";
+        const total = carrito.reduce((sum, p) => sum + p.precio, 0);
+        
+        let domicilioCompleto = domicilio;
+        if(entreCalles) domicilioCompleto += ` (Entre ${entreCalles})`;
+        if(referencias) domicilioCompleto += ` - Ref: ${referencias}`;
+        
+        const pedido = {
+            id: Date.now(),
+            folio: generarFolio(),
+            cliente: nombreCliente,
+            telefono: telefono,
+            domicilio: domicilioCompleto,
+            notas: notas,
+            metodo: metodoSeleccionado,
+            productos: [...carrito],
+            total: total,
+            fecha: new Date().toLocaleString(),
+            fechaCreacion: new Date().toISOString(),
+            estado: 'pendiente'
+        };
+        
+        guardarEnHistorial(pedido);
+        
+        console.log("PEDIDO REALIZADO Y GUARDADO:", pedido);
+        
+        const modal = document.getElementById("modal-exito");
+        const folioSpan = document.getElementById("folio");
+        folioSpan.innerText = `Folio: ${pedido.folio}`;
+        modal.style.display = "flex";
+        
+        carrito = [];
+        guardarCarrito();
+    }
+
+    const menuToggle = document.getElementById("menu-toggle");
+    const navLinks = document.getElementById("nav-links");
+    if(menuToggle) {
+        menuToggle.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+            menuToggle.classList.toggle("active");
+        });
+    }
+
+    document.querySelectorAll('.metodo-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.metodo-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            metodoSeleccionado = this.getAttribute('data-metodo');
+            // Mostrar instrucciones según el método seleccionado
+            mostrarInstrucciones(metodoSeleccionado);
+        });
+    });
+
+    document.getElementById("confirmar-btn")?.addEventListener("click", confirmarPago);
+    document.getElementById("vaciar-carrito")?.addEventListener("click", vaciarCarrito);
+    
+    window.addEventListener('storage', (e) => {
+        if(e.key === 'skzoo_carrito') {
+            cargarCarrito();
+        }
+    });
+    
+    cargarCarrito();
+</script>
+
+</body>
+</html>
